@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>main</title>
+</head>
+<body>
+<h1>접속 해지 하기</h1>
+<h3>임시 아이디를 입력하세요.</h3>
+
+<form method="post" action="disconnect">
+  <input type="text" name = "id">
+
+  <button type="submit">접속 해지 하기</button>
+</form>
+<br>
+<br>
+<br>
+
+<table class="tb_col">
+  <h1>접속 중인 클라이언트 아이디</h1>
+  <tr>
+    <th>아이디</th>
+
+  </tr>
+  <tr th:each="member : ${connect}">
+    <td th:text="${member.id}"></td>
+
+  </tr>
+</table>
+
+
+<br>
+<br>
+<br>
+
+<table class="tb_col">
+  <h1>접속 해지한 클라이언트 아이디</h1>
+  <tr>
+    <th>아이디</th>
+
+  </tr>
+  <tr th:each="member : ${disconnect}">
+    <td th:text="${member.id}"></td>
+
+  </tr>
+</table>
+</div>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+<div>
+  <form method="POST" enctype="multipart/form-data" action="/upload">
+    <table>
+
+      <h1>파일 업로드하기</h1><br>
+      <tr>
+        <td><input type="file" name="uploadfile" multiple="multiple" /></td>
+      </tr>
+      <tr>
+
+        <td><input type="submit" value="업로드 하기" /></td>
+      </tr>
+    </table>
+  </form>
+</div>
+
+<div>
+  <h1>파일 목록</h1>
+  <ul th:each="file: ${files}">
+    <li>
+      <span th:text="${file.getName()}"></span>
+      <a th:href="'/download?fileName='+${file.getName()}"> 파일 다운로드 </a> <br />
+
+    </li>
+  </ul>
+
+</div>
+
+</body>
+</html>
