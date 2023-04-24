@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import synchronizationOfFile.synchronizationOfFile.repository.ConnectListRepository;
 import synchronizationOfFile.synchronizationOfFile.repository.MemberRepository;
 
@@ -37,7 +38,7 @@ public class HomeController {
     }
 
     @GetMapping("/main")
-    public String mainPage(Model model) {
+    public String mainPage(Model model, @RequestParam String name) {
         model.addAttribute("member", memberRepository.findAll());
         model.addAttribute("connect_list", connectListRepository.findAll());
         return "main";
