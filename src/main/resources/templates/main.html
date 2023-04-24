@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
+<div style="width:max-content; margin:auto" />
 <div class="container">
     <div>
         <table class="tb_col">
@@ -40,8 +41,32 @@
     <h2>---------------------------------------------------------</h2>
 
     <div>
+        <h1>파일 목록</h1>
+        <ul th:each="file: ${files}">
+            <li>
+                <span th:text="${file.getName()}"></span>
+                <a th:href="'/download?fileName='+${file.getName()}"> 파일 다운로드 </a> <br />
 
+            </li>
+        </ul>
     </div>
+
+    <h2>---------------------------------------------------------</h2>
+
+    <div>
+        <form method="POST" enctype="multipart/form-data" action="/upload">
+            <table>
+                <h1>파일 업로드하기</h1><br>
+                <tr>
+                    <td><input type="file" name="uploadfile" multiple="multiple" /></td>
+                </tr>
+                <tr>
+                    <td><input type="submit" value="업로드 하기" /></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
 </div> <!-- /container -->
 </body>
 </html>

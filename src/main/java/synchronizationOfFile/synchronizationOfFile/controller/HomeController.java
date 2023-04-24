@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import synchronizationOfFile.synchronizationOfFile.repository.ConnectListRepository;
+import synchronizationOfFile.synchronizationOfFile.repository.FileRepository;
 import synchronizationOfFile.synchronizationOfFile.repository.MemberRepository;
 
 @Controller
@@ -16,6 +17,8 @@ public class HomeController {
     MemberRepository memberRepository;
     @Autowired
     ConnectListRepository connectListRepository;
+    @Autowired
+    FileRepository fileRepository;
 
     @GetMapping("/") // 8080으로 들어오면 이게 호출 됨
     public String home() {
@@ -39,6 +42,7 @@ public class HomeController {
 
     @GetMapping("/main")
     public String mainPage(Model model, @RequestParam String name) {
+        model.addAttribute("files", fileRepository.findAll());
         model.addAttribute("member", memberRepository.findAll());
         model.addAttribute("connect_list", connectListRepository.findAll());
         return "main";

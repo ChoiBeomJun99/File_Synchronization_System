@@ -6,7 +6,7 @@ import jakarta.persistence.Id;
 import lombok.Data;
 
 @Entity @Data
-public class File {
+public class FileInfo {
     @Id @GeneratedValue
     Long id; // 데이터 고유 Id
     String name; // 파일의 이름
