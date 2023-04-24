@@ -3,20 +3,49 @@
 <body>
 <div class="container">
     <div>
-        <table>
-            <thead>
+        <table class="tb_col">
+            <h1>전체 회원 목록</h1>
             <tr>
-                <th>#</th>
                 <th>이름</th>
             </tr>
-            </thead>
-            <tbody>
-            <!--            모델 안에 있는 값을 꺼내와 members에 넣음.-->
-            <tr th:each="user : ${user}">
-                <td th:text="${user.name}"></td>
+            <tr th:each="member : ${member}">
+                <td th:text="${member.name}"></td>
             </tr>
-            </tbody>
         </table>
+    </div>
+
+    <h2>---------------------------------------------------------</h2>
+
+    <div>
+        <table class="tb_col">
+            <h1>접속 중인 회원 목록</h1>
+            <tr>
+                <th>고유 id</th>
+                <th>이름</th>
+            </tr>
+            <tr th:each="member : ${connect_list}">
+                <td th:text="${member.id}"></td>
+                <td th:text="${member.name}"></td>
+            </tr>
+        </table>
+
+        <br />
+
+
+        <form action="disconnect" method="post">
+            <div class="form-group">
+                <label for="name"></label>
+                <input type="text" id="name" name="name" placeholder="회원의 이름을 입력하세요.">
+            </div>
+            <button type="submit">접속 해제</button>
+        </form>
+
+    </div>
+
+    <h2>---------------------------------------------------------</h2>
+
+    <div>
+
     </div>
 </div> <!-- /container -->
 </body>
