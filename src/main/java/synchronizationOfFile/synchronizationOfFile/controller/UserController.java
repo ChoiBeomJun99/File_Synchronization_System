@@ -15,6 +15,7 @@ import synchronizationOfFile.synchronizationOfFile.domain.Member;
 import synchronizationOfFile.synchronizationOfFile.repository.ConnectListRepository;
 import synchronizationOfFile.synchronizationOfFile.repository.MemberRepository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Controller
@@ -28,7 +29,7 @@ public class UserController {
 
     @PostMapping("create")
     public String create(HttpServletResponse response, @RequestParam("name") String name, @RequestParam("password") String password, Model model) throws Exception {
-        Member tmp =memberRepository.findByName(name);
+        Member tmp = memberRepository.findByName(name);
 
         if (tmp != null) {
             // 만약 생성하고자 하는 멤버의 이름이 중복이라면 가입 절차 중단
@@ -40,6 +41,7 @@ public class UserController {
         // 접속 멤버 DB에 추가해주기
         Member user = new Member();
         user.setName(name);
+        user.setCreatedAt(LocalDateTime.now());
         user.setPassword(password);
 
         memberRepository.save(user);
@@ -61,6 +63,7 @@ public class UserController {
                     // 기존에 접속 유저가 아니었기에 접속 데이터에 추가
                     ConnectList user = new ConnectList();
                     user.setName(name);
+                    user.setConnectedAt(LocalDateTime.now());
                     connectListRepository.save(user);
                 }
 
@@ -85,16 +88,16 @@ public class UserController {
         String referer = req.getHeader("REFERER");
 
         String[] referArray = referer.split("=");
-        String name = referArray[1];
+        Long memberId = Long.valueOf(referArray[1]);
 
-        ConnectList tmp = connectListRepository.findByName(name);
+        Optional<ConnectList> tmp = connectListRepository.findById(memberId);
 
         if( tmp != null ) {
             // connectList 에 tmp라는 데이터가 존재한다면 이를 접속해지하는 기능을 위해 connectList에서 remove 해준다.
-            connectListRepository.delete(connectListRepository.findByName(name));
+            connectListRepository.deleteById(memberId);
         }
 
-        return "home";
+        return "redirect:/home";
     }
 
 

@@ -4,36 +4,18 @@
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
 <body class="common-body">
-<div class="myform" style="width:max-content; margin:auto">
-    <div class="main-box">
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">고유 ID</th>
-                <th scope="col">이름</th>
-            </tr>
-            </thead>
-            <tbody>
-                <tr th:each="member : ${member}">
-                    <td class="noBorder" th:text="${member.id}"></td>
-                    <td class="noBorder" th:text="${member.name}"></td>
-                </tr>
-            </tbody>
-        </table>
 
-
-    </div>
-
+<div class="left-main">
     <div class="main-box">
         <table class="tb_col">
             <h1>접속 중인 회원 목록</h1>
             <tr>
-                <th>고유 id</th>
                 <th>이름</th>
+                <th>접속 시간</th>
             </tr>
             <tr th:each="member : ${connect_list}">
-                <td th:text="${member.id}"></td>
                 <td th:text="${member.name}"></td>
+                <td th:text="${#temporals.format(member.connectedAt, 'yyyy.MM.dd / HH:mm:ss')}"></td>
             </tr>
         </table>
         <br />
@@ -44,17 +26,44 @@
 
     </div>
 
-    <br/>
-    <br/>
-    <br/>
+    <div class="main-box">
+        <h1>전체 회원 목록</h1>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">고유 ID</th>
+                <th scope="col">이름</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member : ${member}">
+                <td class="noBorder" th:text="${member.id}"></td>
+                <td class="noBorder" th:text="${member.name}"></td>
+            </tr>
+            </tbody>
+        </table>
 
+
+    </div>
+</div>
+
+<div class="right-main">
     <div class="main-box">
         <h1>파일 목록</h1>
         <ul th:each="file: ${files}">
             <li>
-                <span th:text="${file.getName()}"></span>
-                <a th:href="'/download?fileName='+${file.getName()}&memberId=${file.getMemberId()}"> 파일 다운로드 </a>
-                <br />
+                <form action="download" method="post">
+                    <input type="text"  id="fileName" name="fileName" th:value="${file.getName()}"  placeholder="&#xf003;" />
+                    <input type="hidden"  id="id" name="memberId" th:value="${file.getMemberId()}"  placeholder="&#xf003;" />
+                    <button type="submit">다운로드</button>
+                </form>
+
+                <form action="download-list" method="get">
+                    <input type="hidden"  id="lookupFile" name="fileName" th:value="${file.getName()}"  placeholder="&#xf003;" />
+                    <button type="submit">다운로드 정보 조회</button>
+                </form>
+                <br style="clear: both;" />
+
             </li>
         </ul>
     </div>
@@ -68,12 +77,11 @@
                 <tr>
                     <td><input type="file" name="uploadfile" multiple="multiple" /></td>
                 </tr>
-                <tr>
-                    <td><input class="small-button" type="submit" value="업로드 하기" /></td>
-                </tr>
             </table>
+            <td><input class="small-button" type="submit" value="업로드 하기" /></td>
         </form>
     </div>
+
 </div>
 </body>
 </html>

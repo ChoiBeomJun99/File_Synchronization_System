@@ -1,5 +1,6 @@
 package synchronizationOfFile.synchronizationOfFile.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.PropertyEditorRegistrar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,34 +36,37 @@ public class FileController {
     FileRepository fileRepository;
 
     @PostMapping("/upload")
-    public String upload(@RequestParam("uploadfile") MultipartFile[] uploadfile, @RequestParam("memberId") Long memberId, Model model, RedirectAttributes re) {
+    public String upload(HttpServletResponse response, @RequestParam("uploadfile") MultipartFile[] uploadfile, @RequestParam("memberId") Long memberId, Model model, RedirectAttributes re) throws Exception {
         List<FileTransferObject> list = new ArrayList<>();
         re.addAttribute("memberId", memberId);
 
-        if (uploadfile.equals(null)){
-            // 실패 시 alert 창 띄워주기 필요
-            System.out.println("no file in uploadFile Array");
-            return "redirect:/main";
-        }
-
         for (MultipartFile file : uploadfile) {
-            FileTransferObject dto = new FileTransferObject(file.getOriginalFilename(), file.getContentType());
-            list.add(dto);
 
+            // 업로드 할 파일이 없는 상황
+            if(file.isEmpty()) {
+                ScriptUtils.alertAndBackPage(response, "파일을 등록해 주세요.");
+                return null;
+            } else {
 
-            FileInfo fileName = new FileInfo();
-            fileName.setName(file.getOriginalFilename());
-            fileName.setMemberId(memberId);
-            fileName.setType(file.getContentType());
+                // 파일 업로드 과정
+                FileTransferObject dto = new FileTransferObject(file.getOriginalFilename(), file.getContentType());
+                list.add(dto);
 
-            fileRepository.save(fileName);
+                // db에 파일 저장 정보 입력
+                FileInfo fileName = new FileInfo();
+                fileName.setName(file.getOriginalFilename());
+                fileName.setMemberId(memberId);
+                fileName.setCreateAt(LocalDateTime.now());
+                fileName.setType(file.getContentType());
 
-            File newFileName = new File(dto.getFileName());
+                fileRepository.save(fileName);
+                File newFileName = new File(dto.getFileName());
 
-            try {
-                file.transferTo(newFileName);
-            } catch (Exception e) {
-                e.printStackTrace();
+                try {
+                    file.transferTo(newFileName);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 

@@ -14,6 +14,8 @@ input {
     text-decoration: inherit;
     }
 
+
+
     button {
         height: 40px;
         width: 100%;
@@ -55,6 +57,14 @@ input {
         -webkit-box-shadow: 0px 0px 3px 1px rgba(38, 35, 128, 1);
         -moz-box-shadow: 0px 0px 3px 1px rgba(38, 35, 128, 1);
         box-shadow: 0px 0px 3px 1px rgba(38, 35, 128, 1);
+    }
+
+    .myform-main {
+       background: #0b2144;
+       margin: auto;
+       -webkit-box-shadow: 0px 0px 3px 1px rgba(38, 35, 128, 1);
+       -moz-box-shadow: 0px 0px 3px 1px rgba(38, 35, 128, 1);
+       box-shadow: 0px 0px 3px 1px rgba(38, 35, 128, 1);
     }
 
     .myform a {
@@ -107,23 +117,24 @@ input {
  }
 
  .small-button {
- height: 40px;
-          width: 50%;
-          border-radius: 4px;
-          margin-top: 30px;
-              margin-bottom: 20px;
-              border: none;
-              background: #27d4e8;
-              color: #ffffff;
-              font-family: sans-serif;
-              font-weight: 700;
-              font-size: 14pt;
+    height: 40px;
+    width: 50%;
+    border-radius: 4px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    border: none;
+    background: #27d4e8;
+    color: #ffffff;
+    font-family: sans-serif;
+    font-weight: 700;
+    font-size: 14pt;
  }
 
  .main-box {
-    width: 700px;
-    padding: 30px;
-    margin: auto;
+    height:100%;
+    width: 80%;
+    padding:20px;
+    margin: 10px;
     text-align: center;
     border-radius: 5px;
     border: solid;
@@ -133,7 +144,25 @@ input {
  .main-title{
     border-bottom: solid;
     border-color: #ffffff;
-    width: 700px;
  }
 
 
+ table {
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 10px;
+    text-align: center;
+  }
+
+
+.left-main {
+    float: left;
+    width: 50%;
+}
+
+.right-main {
+    float: right;
+    width: 50%;
+}

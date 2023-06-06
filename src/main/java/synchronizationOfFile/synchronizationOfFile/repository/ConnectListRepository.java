@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface ConnectListRepository extends JpaRepository<ConnectList, Long> {
     ConnectList findByName(String Name);
+
 }
