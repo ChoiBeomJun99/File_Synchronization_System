@@ -19,7 +19,7 @@ public class FileInfo {
     private LocalDateTime updatedAt;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd / HH:mm:ss")
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
 
 }

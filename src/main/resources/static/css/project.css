@@ -36,6 +36,12 @@ input {
         text-align: center;
     }
 
+    .file-form {
+        width: 100%;
+        margin: 5px;
+        text-align: center;
+    }
+
     input:focus {
         outline: none
     }
@@ -130,6 +136,19 @@ input {
     font-size: 14pt;
  }
 
+ .smallest-button {
+     height: 30px;
+     width: 100px;
+     border-radius: 4px;
+     margin: 10px;
+     border: none;
+     background: #27d4e8;
+     color: #ffffff;
+     font-family: sans-serif;
+     font-weight: 700;
+     font-size: 11pt;
+ }
+
  .main-box {
     height:100%;
     width: 80%;
@@ -152,17 +171,34 @@ input {
   }
 
   th, td {
-    padding: 10px;
+    padding: 5px 25px;
     text-align: center;
   }
 
 
 .left-main {
     float: left;
-    width: 50%;
+    width: 40%;
 }
 
 .right-main {
     float: right;
-    width: 50%;
+    width: 60%;
+}
+
+.list-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+}
+
+.list-item p {
+    display: inline;
+    margin: 5px;
+    flex: 1;
+  }
+
+
+ .list-item form {
+  flex:1
 }

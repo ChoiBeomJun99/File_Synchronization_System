@@ -56,7 +56,8 @@ public class FileController {
                 FileInfo fileName = new FileInfo();
                 fileName.setName(file.getOriginalFilename());
                 fileName.setMemberId(memberId);
-                fileName.setCreateAt(LocalDateTime.now());
+                fileName.setCreatedAt(LocalDateTime.now());
+                fileName.setUpdatedAt(LocalDateTime.now());
                 fileName.setType(file.getContentType());
 
                 fileRepository.save(fileName);

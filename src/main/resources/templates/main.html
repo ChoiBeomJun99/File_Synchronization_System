@@ -50,20 +50,32 @@
 <div class="right-main">
     <div class="main-box">
         <h1>파일 목록</h1>
-        <ul th:each="file: ${files}">
-            <li>
-                <form action="download" method="post">
-                    <input type="text"  id="fileName" name="fileName" th:value="${file.getName()}"  placeholder="&#xf003;" />
+        <li class="list-item">
+            <p>파일 이름</p>
+            <p>최근 생성 시간</p>
+            <p>최근 수정 시간</p>
+            <p></p>
+            <p></p>
+        </li>
+        <ul style="padding: 0px; border-top: 1px solid white;" th:each="file: ${files}">
+            <li class="list-item">
+                    <p th:text="${file.getName()}"></p>
+                <br/>
+                    <p th:text="${#temporals.format(file.getCreatedAt, 'HH:mm:ss')}"></p>
+                <br/>
+                    <p th:text="${#temporals.format(file.getUpdatedAt, 'HH:mm:ss')}"></p>
+                <br/>
+
+                <form class="file-form" action="download" method="post">
+                    <input type="hidden"  id="fileName" name="fileName" th:value="${file.getName()}"  placeholder="&#xf003;" />
                     <input type="hidden"  id="id" name="memberId" th:value="${file.getMemberId()}"  placeholder="&#xf003;" />
-                    <button type="submit">다운로드</button>
+                    <button class="smallest-button" type="submit">다운로드</button>
                 </form>
 
-                <form action="download-list" method="get">
+                <form class="file-form" action="download-list" method="get">
                     <input type="hidden"  id="lookupFile" name="fileName" th:value="${file.getName()}"  placeholder="&#xf003;" />
-                    <button type="submit">다운로드 정보 조회</button>
+                    <button class="smallest-button" type="submit">정보 조회</button>
                 </form>
-                <br style="clear: both;" />
-
             </li>
         </ul>
     </div>
