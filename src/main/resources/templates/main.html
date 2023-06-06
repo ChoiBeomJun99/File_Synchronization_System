@@ -1,23 +1,30 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<body>
-<div style="width:max-content; margin:auto" />
-<div class="container">
-    <div>
-        <table class="tb_col">
-            <h1>전체 회원 목록</h1>
+<link rel="stylesheet" type="text/css" href="/css/project.css"/>
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+<body class="common-body">
+<div class="myform" style="width:max-content; margin:auto">
+    <div class="main-box">
+        <table class="table">
+            <thead>
             <tr>
-                <th>이름</th>
+                <th scope="col">고유 ID</th>
+                <th scope="col">이름</th>
             </tr>
-            <tr th:each="member : ${member}">
-                <td th:text="${member.name}"></td>
-            </tr>
+            </thead>
+            <tbody>
+                <tr th:each="member : ${member}">
+                    <td class="noBorder" th:text="${member.id}"></td>
+                    <td class="noBorder" th:text="${member.name}"></td>
+                </tr>
+            </tbody>
         </table>
+
+
     </div>
 
-    <h2>---------------------------------------------------------</h2>
-
-    <div>
+    <div class="main-box">
         <table class="tb_col">
             <h1>접속 중인 회원 목록</h1>
             <tr>
@@ -31,42 +38,42 @@
         </table>
         <br />
 
-
         <form action="disconnect" method="post">
-            <button type="submit">접속 해제</button>
+            <button class="small-button" type="submit">접속 해제</button>
         </form>
 
     </div>
 
-    <h2>---------------------------------------------------------</h2>
+    <br/>
+    <br/>
+    <br/>
 
-    <div>
+    <div class="main-box">
         <h1>파일 목록</h1>
         <ul th:each="file: ${files}">
             <li>
                 <span th:text="${file.getName()}"></span>
-                <a th:href="'/download?fileName='+${file.getName()}"> 파일 다운로드 </a> <br />
-
+                <a th:href="'/download?fileName='+${file.getName()}&memberId=${file.getMemberId()}"> 파일 다운로드 </a>
+                <br />
             </li>
         </ul>
     </div>
 
-    <h2>---------------------------------------------------------</h2>
 
-    <div>
+    <div class="main-box">
         <form method="POST" enctype="multipart/form-data" action="/upload">
+            <input type="hidden" id="memberId" name="memberId" th:value="${memberId} "/>
             <table>
                 <h1>파일 업로드하기</h1><br>
                 <tr>
                     <td><input type="file" name="uploadfile" multiple="multiple" /></td>
                 </tr>
                 <tr>
-                    <td><input type="submit" value="업로드 하기" /></td>
+                    <td><input class="small-button" type="submit" value="업로드 하기" /></td>
                 </tr>
             </table>
         </form>
     </div>
-
-</div> <!-- /container -->
+</div>
 </body>
 </html>

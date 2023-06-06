@@ -62,7 +62,7 @@ public class UserController {
                     connectListRepository.save(user);
                 }
 
-                re.addAttribute("name", name);
+                re.addAttribute("memberId", findUser.getId());
                 // 로그인 성공시 main 으로 보내주기
                 return "redirect:/main";
             }

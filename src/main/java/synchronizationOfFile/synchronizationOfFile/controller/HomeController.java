@@ -41,10 +41,13 @@ public class HomeController {
     }
 
     @GetMapping("/main")
-    public String mainPage(Model model, @RequestParam String name) {
+    public String mainPage(Model model, @RequestParam Long memberId) {
         model.addAttribute("files", fileRepository.findAll());
         model.addAttribute("member", memberRepository.findAll());
         model.addAttribute("connect_list", connectListRepository.findAll());
+
+        System.out.println("memberId : " + memberId);
+        model.addAttribute("memberId", memberId);
         return "main";
     }
 }

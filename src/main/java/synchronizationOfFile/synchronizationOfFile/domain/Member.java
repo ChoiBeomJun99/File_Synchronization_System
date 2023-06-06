@@ -8,7 +8,6 @@ import lombok.Data;
 @Entity
 @Data
 public class Member {
-
     @Id
     @GeneratedValue
     private Long id; // 시스템이 저장하는 id (기본키 역할의 필드이다.)

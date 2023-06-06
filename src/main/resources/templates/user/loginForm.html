@@ -1,20 +1,15 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<body>
-<div class="container" style="width:max-content; margin:auto; margin-top:100px">
-    <form action="login" method="post">
-        <div class="form-group">
-            <label for="name">이름</label>
-            <input type="text" id="name" name="name" placeholder="이름을 입력하세요">
-
-            <br/>
-            <label for="password">비밀번호</label>
-            <input type="text" id="password" name="password" placeholder="비밀번호를 입력하세요.">
-        </div>
-
-        <br/>
-        <button type="submit">접속</button>
-    </form>
-</div> <!-- /container -->
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="/css/project.css"/>
+<body class="common-body">
+    <div class="myform">
+        <div class="logo">로그인 정보를 입력해 주세요</div>
+        <form action="login" method="post">
+            <input type="name"  id="name" name="name"  placeholder="&#xf003;   Name" />
+            <input type="password" id="password" name="password" placeholder=" &#xf023;  Password" />
+            <button type="submit">접속</button>
+        </form>
+    </div>
 </body>
 </html>

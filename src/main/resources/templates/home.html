@@ -1,14 +1,17 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<body>
-<div class="container" style="width:max-content; margin:auto; margin-top:100px">
-  <div>
-    <h1>클라이언트 접속</h1>
-    <p>
-      <a href="/create">회원 가입</a>
-      <a href="/login">로그인 (접속)</a>
-    </p>
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="/css/project.css"/>
+<body class="common-body">
+  <div class="myform" >
+    <div class="logo">
+      <i class="fa fa-cloud-upload" style="margin: auto" aria-hidden="true"></i>
+
+      <h1 style="text-align: center">파일 동기화 시스템</h1>
+
+      <button class="small-button" style="text-align: center" onclick = "location.href = '/create'">회원 가입</button>
+      <button class="small-button" style="text-align: center" onclick = "location.href = '/login'">로그인 (접속)</button>
+    </div>
   </div>
-</div> <!-- /container -->
 </body>
 </html>
