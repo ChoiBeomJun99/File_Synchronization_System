@@ -1,6 +1,7 @@
 package synchronizationOfFile.synchronizationOfFile.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,12 +27,13 @@ public class UserController {
     ConnectListRepository connectListRepository;
 
     @PostMapping("create")
-    public String create(@RequestParam("name") String name, @RequestParam("password") String password, Model model) {
+    public String create(HttpServletResponse response, @RequestParam("name") String name, @RequestParam("password") String password, Model model) throws Exception {
         Member tmp =memberRepository.findByName(name);
 
         if (tmp != null) {
             // 만약 생성하고자 하는 멤버의 이름이 중복이라면 가입 절차 중단
-            return "home";
+            ScriptUtils.alertAndMovePage(response, "해당 이름은 중복입니다.", "/create");
+            return null;
         }
 
         // 이름 중복 검사 이후
@@ -40,14 +42,14 @@ public class UserController {
         user.setName(name);
         user.setPassword(password);
 
-        System.out.println("name : " + user.getName() + " / password : " + user.getPassword());
         memberRepository.save(user);
+        ScriptUtils.alertAndMovePage(response, "회원가입이 완료되었습니다." , "/home");
 
         return "home";
     }
 
     @PostMapping("login")
-    public String login(@RequestParam("name") String name, @RequestParam("password") String password, Model model, RedirectAttributes re){
+    public String login(HttpServletResponse response, @RequestParam("name") String name, @RequestParam("password") String password, Model model, RedirectAttributes re) throws Exception{
 
         Member findUser = memberRepository.findByName(name);
 
@@ -63,12 +65,16 @@ public class UserController {
                 }
 
                 re.addAttribute("memberId", findUser.getId());
+
                 // 로그인 성공시 main 으로 보내주기
                 return "redirect:/main";
             }
             System.out.println("비밀번호가 일치하지 않은 상황 : " + password + " / " + findUser.getPassword());
+            ScriptUtils.alertAndMovePage(response, "비밀번호가 일치하지 않습니다.", "/login");
         } else {
             System.out.println("해당 아이디와 비밀번호의 사용자는 존재하지 않음 : " + name + " / " + password);
+            ScriptUtils.alertAndMovePage(response, "존재하지 않은 회원입니다.", "/login");
+
         }
         // 로그인 실패 시 home 으로 보내주기
         return "home";
