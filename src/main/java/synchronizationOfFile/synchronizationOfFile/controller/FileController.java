@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.tags.ParamTag;
 import synchronizationOfFile.synchronizationOfFile.domain.FileInfo;
 import synchronizationOfFile.synchronizationOfFile.domain.FileTransferObject;
 import synchronizationOfFile.synchronizationOfFile.repository.FileRepository;
@@ -82,8 +83,9 @@ public class FileController {
     @GetMapping("/download")
     public ResponseEntity<Resource> download(@ModelAttribute FileTransferObject dto, @RequestParam("memberId") Long memberId) throws IOException {
         // 각 멤버당 파일 담당 디렉토리가 있기에 멤버의 아이디를 같이 참조한다.
-        Path path = Paths.get(filePath + "/" + memberId + "/" + dto.getFileName());
+//        Path path = Paths.get(filePath + "/" + memberId + "/" + dto.getFileName());
 
+        Path path = Paths.get(filePath + "/" + dto.getFileName());
         String contentType = Files.probeContentType(path);
 
         HttpHeaders headers = new HttpHeaders();
