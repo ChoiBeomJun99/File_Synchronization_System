@@ -25,7 +25,6 @@
         </form>
 
     </div>
-
     <div class="main-box">
         <h1>전체 회원 목록</h1>
         <table class="table">
@@ -47,12 +46,34 @@
 
 
     </div>
+    <div class="main-box">
+        <h1>공유 받은 파일 목록</h1>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">파일 이름</th>
+                <th scope="col">공유자 ID</th>
+                <th />
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="sharedFile : ${sharedFiles}">
+                <td class="noBorder" th:text="${sharedFile.fileName}"></td>
+                <td class="noBorder" th:text="${sharedFile.shareMemberId}"></td>
+                <form action="disconnect" method="post">
+                    <td><input class="smallest-button" type="submit" value="다운로드" /></td>
+                </form>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div class="right-main">
     <div class="main-box">
         <h1>파일 목록</h1>
         <li class="list-item">
+            <p style="font-weight: 700">파일 ID</p>
             <p style="font-weight: 700">파일 이름</p>
             <p style="font-weight: 700">생성 시간</p>
             <p style="font-weight: 700">최근 수정시간</p>
@@ -63,6 +84,8 @@
         </li>
         <ul style="padding: 0px; border-top: 1px solid white;" th:each="file: ${files}">
             <li class="list-item">
+                <p th:text="${file.getId()}"></p>
+                <br/>
                 <p th:text="${file.getName()}"></p>
                 <br/>
                 <p th:text="${#temporals.format(file.getCreatedAt, 'HH:mm:ss')}"></p>
@@ -72,19 +95,20 @@
                 <p th:text="${file.getMemberId()}"></p>
                 <br/>
 
-                <form class="file-form" action="download" method="post">
+                <form class="file-form" action="download" method="get">
                     <input type="hidden"  id="fileName" name="fileName" th:value="${file.getName()}"  placeholder="&#xf003;" />
                     <input type="hidden"  id="id" name="memberId" th:value="${file.getMemberId()}"  placeholder="&#xf003;" />
                     <button class="smallest-button" type="submit">다운로드</button>
                 </form>
 
-                <form class="file-form" action="update" method="get">
+                <form class="file-form" action="updateFile" method="get">
+                    <input type="hidden"  id="updateMemberId" name="updateMemberId" th:value="${memberId}"  placeholder="&#xf003;" />
                     <input type="hidden"  id="updateFile" name="updateFile" th:value="${file.getName()}"  placeholder="&#xf003;" />
                     <button class="smallest-button" type="submit">파일 수정</button>
                 </form>
 
-                <form class="file-form" action="delete" method="get">
-                    <input type="hidden"  id="deleteFile" name="deleteFile" th:value="${file.getName()}"  placeholder="&#xf003;" />
+                <form class="file-form" action="removeFile" method="post">
+                    <input type="hidden"  id="removeFile" name="removeFile" th:value="${file.getName()}"  placeholder="&#xf003;" />
                     <button class="smallest-button" type="submit">파일 삭제</button>
                 </form>
             </li>
@@ -93,7 +117,8 @@
 
 
     <div class="main-box">
-        <input type="hidden" id="memberId" name="memberId" th:value="${memberId} "/>
+        <form method="POST" enctype="multipart/form-data" action="/upload">
+            <input type="hidden" id="memberId" name="memberId" th:value="${memberId} "/>
             <table>
                 <h1>파일 업로드하기</h1><br>
                 <tr>
@@ -103,7 +128,6 @@
             <td><input class="small-button" type="submit" value="업로드 하기" /></td>
         </form>
     </div>
-
 </div>
 </body>
 </html>

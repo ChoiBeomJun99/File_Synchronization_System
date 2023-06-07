@@ -1,5 +1,6 @@
 package synchronizationOfFile.synchronizationOfFile.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.PropertyEditorRegistrar;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,6 +25,8 @@ import synchronizationOfFile.synchronizationOfFile.repository.FileRepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -99,5 +103,76 @@ public class FileController {
         Resource resource = new InputStreamResource(Files.newInputStream(path));
 
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/removeFile")
+    public String removeFile(HttpServletRequest req, @RequestParam("removeFile") String removeFile, RedirectAttributes re) throws IOException {
+        String referer = req.getHeader("REFERER");
+        String[] referArray = referer.split("=");
+        Long memberId = Long.valueOf(referArray[1]);
+
+        re.addAttribute("memberId", memberId);
+
+        Path path = Paths.get(filePath + "/" + removeFile);
+
+        //UUID가 포함된 파일이름을 디코딩해줍니다.
+        File file = new File(String.valueOf(path));
+        boolean result = file.delete();
+
+        File thumbnail = new File(file.getParent(),"s_"+file.getName());
+        //getParent() - 현재 File 객체가 나태내는 파일의 디렉토리의 부모 디렉토리의 이름 을 String으로 리턴해준다.
+        result = thumbnail.delete();
+
+        // db 삭제 작업
+        fileRepository.delete(fileRepository.findByName(removeFile));
+        return "redirect:/main";
+    }
+
+    @PostMapping("/updateFile") @Transactional
+    public String updateFile(HttpServletResponse response, @RequestParam("uploadfile") MultipartFile[] uploadfile, @RequestParam("updateFile") String updateFile, @RequestParam("memberId") Long memberId, Model model, RedirectAttributes re) throws IOException {
+        List<FileTransferObject> list = new ArrayList<>();
+        re.addAttribute("memberId", memberId);
+
+        for (MultipartFile file : uploadfile) {
+            // 업로드 할 파일이 없는 상황
+            if(file.isEmpty()) {
+                ScriptUtils.alertAndBackPage(response, "파일을 등록해 주세요.");
+                return null;
+            } else {
+                // 업데이트를 위한 삭제 과정
+                Path path = Paths.get(filePath + "/" + updateFile);
+
+                //UUID가 포함된 파일이름을 디코딩해줍니다.
+                File removeFile = new File(String.valueOf(path));
+                boolean result = removeFile.delete();
+
+                File thumbnail = new File(removeFile.getParent(),"s_"+file.getName());
+                //getParent() - 현재 File 객체가 나태내는 파일의 디렉토리의 부모 디렉토리의 이름 을 String으로 리턴해준다.
+                result = thumbnail.delete();
+
+                // 업데이트할 파일 정보 가져오기
+                FileInfo tmp = fileRepository.findByName(updateFile);
+
+                // 파일 업로드 과정
+                FileTransferObject dto = new FileTransferObject(file.getOriginalFilename(), file.getContentType());
+                list.add(dto);
+
+                // db 데이터 업데이트 과정 (파일 이름, 수정자, 업데이트 시간 반영)
+                tmp.setName(file.getOriginalFilename());
+                tmp.setMemberId(tmp.getMemberId());
+                tmp.setUpdatedAt(LocalDateTime.now());
+
+                File newFileName = new File(dto.getFileName());
+                try {
+                    file.transferTo(newFileName);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        model.addAttribute("files", fileRepository.findAll());
+        // 업로드 성공 시 해당 페이지를 redirect 물론 본인의 memberId도 포함
+        return "redirect:/main";
     }
 }
