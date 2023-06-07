@@ -39,7 +39,13 @@
             <tr th:each="member : ${member}">
                 <td class="noBorder" th:text="${member.id}"></td>
                 <td class="noBorder" th:text="${member.name}"></td>
-                <td><input class="smallest-button" type="submit" value="파일 공유" /></td>
+                <td>
+                    <form class="share-form" action="shareFile" method="get">
+                        <input type="hidden"  id="shareMemberId" name="shareMemberId" th:value="${memberId}"  placeholder="&#xf003;" />
+                        <input type="hidden"  id="sharedMemberId" name="sharedMemberId" th:value="${member.id}"  placeholder="&#xf003;" />
+                        <input class="smallest-button" type="submit" value="파일 공유" />
+                    </form>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -60,8 +66,36 @@
             <tr th:each="sharedFile : ${sharedFiles}">
                 <td class="noBorder" th:text="${sharedFile.fileName}"></td>
                 <td class="noBorder" th:text="${sharedFile.shareMemberId}"></td>
-                <form action="disconnect" method="post">
-                    <td><input class="smallest-button" type="submit" value="다운로드" /></td>
+                <form action="download-shareFile" method="post">
+                    <td>
+                        <input type="hidden"  id="sharedFileName" name="sharedFileName" th:value="${sharedFile.fileName}" />
+                        <input class="smallest-button" type="submit" value="다운로드" />
+                    </td>
+                </form>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="main-box">
+        <h1>공유한 파일 목록</h1>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">파일 이름</th>
+                <th scope="col">공유 대상 ID</th>
+                <th />
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="shareFile : ${shareFiles}">
+                <td class="noBorder" th:text="${shareFile.fileName}"></td>
+                <td class="noBorder" th:text="${shareFile.shareMemberId}"></td>
+                <form action="update-shareFile" method="post">
+                    <td>
+                        <input type="hidden"  id="shareFileName" name="shareFileName" th:value="${shareFile.fileName}" />
+                        <input class="smallest-button" type="submit" value="수정하기" />
+                    </td>
                 </form>
             </tr>
             </tbody>

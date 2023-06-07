@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" type="text/css" href="/css/project.css"/>
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+<head>
+</head>
+<body class="common-body">
+<div class="myform">
+  <form method="POST" enctype="multipart/form-data" action="/shareFile">
+    <table>
+      <br/>
+      <h1>파일 공유하기</h1><br>
+      <div style="display:flex">
+        <div style="flex: 1">
+          공유 대상 ID: <h3 th:text="${sharedMember.getId()}"></h3><br/>
+        </div>
+        <div style="flex: 1">
+          이름 : <h3 th:text="${sharedMember.getName()}"></h3><br/>
+        </div>
+      </div>
+      <tr>
+        <td><input type="file" name="uploadfile" multiple="multiple"/></td>
+      </tr>
+    </table>
+    <td><input type="hidden" name="sharedMemberId" id="sharedMemberId" th:value="${sharedMember.getId()}"></td>
+    <td><input type="hidden" name="shareMemberId" id="shareMemberId" th:value="${shareMemberId}"></td>
+    <td><input class="small-button" type="submit" value="공유하기" /></td>
+  </form>
+</div>
+</body>
+</html>

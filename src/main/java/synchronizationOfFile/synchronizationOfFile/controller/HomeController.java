@@ -1,5 +1,6 @@
 package synchronizationOfFile.synchronizationOfFile.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,10 +8,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import synchronizationOfFile.synchronizationOfFile.domain.FileInfo;
+import synchronizationOfFile.synchronizationOfFile.domain.Member;
 import synchronizationOfFile.synchronizationOfFile.repository.ConnectListRepository;
 import synchronizationOfFile.synchronizationOfFile.repository.FileRepository;
 import synchronizationOfFile.synchronizationOfFile.repository.MemberRepository;
 import synchronizationOfFile.synchronizationOfFile.repository.SharedFileListRepository;
+
+import java.io.IOException;
+import java.util.Optional;
 
 @Controller
 public class HomeController {
@@ -49,7 +54,8 @@ public class HomeController {
         model.addAttribute("files", fileRepository.findAll());
         model.addAttribute("member", memberRepository.findAll());
         model.addAttribute("connect_list", connectListRepository.findAll());
-        model.addAttribute("sharedFiles", sharedFileListRepository.findBySharedMemberId(memberId));
+        model.addAttribute("shareFiles", sharedFileListRepository.findBySharedMemberId(memberId));
+        model.addAttribute("sharedFiles", sharedFileListRepository.findByShareMemberId(memberId));
 
         model.addAttribute("memberId", memberId);
         return "main";
@@ -64,6 +70,22 @@ public class HomeController {
         model.addAttribute("memberId", id); // 업데이트를 진행하려는 사용자의 id
 
         return "updateFile";
+    }
+
+    @GetMapping("/shareFile")
+    public String shareFilePage(HttpServletResponse response, Model model, @RequestParam("shareMemberId") Long share, @RequestParam("sharedMemberId") Long shared) throws IOException {
+
+        // 자신한테는 공유할 수 없음
+        if (share.equals(shared)) {
+            ScriptUtils.alertAndBackPage(response, "자신한테는 파일을 공유할 수 없습니다.");
+            return null;
+        }
+
+        Optional<Member> tmp = memberRepository.findById(shared);
+        model.addAttribute("sharedMember", tmp.get());
+        model.addAttribute("shareMemberId", share);
+
+        return "shareFile";
     }
 
 }

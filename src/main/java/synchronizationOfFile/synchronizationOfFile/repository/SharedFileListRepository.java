@@ -5,6 +5,7 @@ import synchronizationOfFile.synchronizationOfFile.domain.SharedFileList;
 
 public interface SharedFileListRepository extends JpaRepository<SharedFileList, Long>  {
     SharedFileList findBySharedMemberId(Long id);
+    SharedFileList findByShareMemberId(Long id);
     SharedFileList findByFileName(String fileName);
 
 }

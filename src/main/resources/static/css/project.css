@@ -14,8 +14,6 @@ input {
     text-decoration: inherit;
     }
 
-
-
     button {
         height: 40px;
         width: 100%;
@@ -39,6 +37,11 @@ input {
     .file-form {
         width: 100%;
         margin: 5px;
+        text-align: center;
+    }
+
+    .share-form{
+        margin: 0;
         text-align: center;
     }
 

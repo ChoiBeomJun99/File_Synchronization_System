@@ -14,6 +14,7 @@ public class SharedFileList {
     @GeneratedValue
     Long id; // 데이터 고유 Id
     String fileName; // 파일의 이름
+    String type;
     Long shareMemberId; // 공유한 멤버의 Id
     Long sharedMemberId; // 공유받은 멤버의 Id
     @DateTimeFormat(pattern = "yyyy-MM-dd / HH:mm:ss")

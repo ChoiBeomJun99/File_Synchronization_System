@@ -21,7 +21,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.tags.ParamTag;
 import synchronizationOfFile.synchronizationOfFile.domain.FileInfo;
 import synchronizationOfFile.synchronizationOfFile.domain.FileTransferObject;
+import synchronizationOfFile.synchronizationOfFile.domain.SharedFileList;
 import synchronizationOfFile.synchronizationOfFile.repository.FileRepository;
+import synchronizationOfFile.synchronizationOfFile.repository.SharedFileListRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +41,8 @@ import java.util.List;
 public class FileController {
     @Autowired
     FileRepository fileRepository;
+    @Autowired
+    SharedFileListRepository sharedFileListRepository;
 
     @PostMapping("/upload")
     public String upload(HttpServletResponse response, @RequestParam("uploadfile") MultipartFile[] uploadfile, @RequestParam("memberId") Long memberId, Model model, RedirectAttributes re) throws Exception {
@@ -104,6 +108,29 @@ public class FileController {
 
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
     }
+
+    @PostMapping("/download-shareFile")
+    public ResponseEntity<Resource> download_shareFile(@ModelAttribute FileTransferObject dto, @RequestParam("shareFileName") String fileName) throws IOException {
+        // 각 멤버당 파일 담당 디렉토리가 있기에 멤버의 아이디를 같이 참조한다.
+//        Path path = Paths.get(filePath + "/" + memberId + "/" + dto.getFileName());
+
+        Path path = Paths.get(filePath + "/" + fileName);
+        String contentType = Files.probeContentType(path);
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setContentDisposition(
+                ContentDisposition.builder("attachment")
+                        .filename(fileName, StandardCharsets.UTF_8)
+                        .build());
+
+        headers.add(HttpHeaders.CONTENT_TYPE, contentType);
+        Resource resource = new InputStreamResource(Files.newInputStream(path));
+
+        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+    }
+
+
 
     @PostMapping("/removeFile")
     public String removeFile(HttpServletRequest req, @RequestParam("removeFile") String removeFile, RedirectAttributes re) throws IOException {
@@ -172,6 +199,48 @@ public class FileController {
         }
 
         model.addAttribute("files", fileRepository.findAll());
+        // 업로드 성공 시 해당 페이지를 redirect 물론 본인의 memberId도 포함
+        return "redirect:/main";
+    }
+
+    @PostMapping("/shareFile")
+    public String shareFile(HttpServletResponse response, @RequestParam("uploadfile") MultipartFile[] uploadfile, @RequestParam("sharedMemberId") Long shared,
+                            @RequestParam("shareMemberId") Long share, Model model, RedirectAttributes re) throws Exception {
+        List<FileTransferObject> list = new ArrayList<>();
+        re.addAttribute("memberId", share);
+
+        for (MultipartFile file : uploadfile) {
+
+            // 업로드 할 파일이 없는 상황
+            if(file.isEmpty()) {
+                ScriptUtils.alertAndBackPage(response, "파일을 등록해 주세요.");
+                return null;
+            } else {
+
+                // 파일 업로드 과정
+                FileTransferObject dto = new FileTransferObject(file.getOriginalFilename(), file.getContentType());
+                list.add(dto);
+
+                // db에 파일 저장 정보 입력
+                SharedFileList fileName = new SharedFileList();
+                fileName.setFileName(file.getOriginalFilename());
+                fileName.setShareMemberId(share);
+                fileName.setSharedMemberId(shared);
+
+                fileName.setCreatedAt(LocalDateTime.now());
+                fileName.setType(file.getContentType());
+
+                sharedFileListRepository.save(fileName);
+                File newFileName = new File(dto.getFileName());
+
+                try {
+                    file.transferTo(newFileName);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         // 업로드 성공 시 해당 페이지를 redirect 물론 본인의 memberId도 포함
         return "redirect:/main";
     }
