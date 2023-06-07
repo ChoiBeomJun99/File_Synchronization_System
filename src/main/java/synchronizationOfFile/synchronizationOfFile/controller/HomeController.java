@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import synchronizationOfFile.synchronizationOfFile.domain.FileInfo;
 import synchronizationOfFile.synchronizationOfFile.domain.Member;
+import synchronizationOfFile.synchronizationOfFile.domain.SharedFileList;
 import synchronizationOfFile.synchronizationOfFile.repository.ConnectListRepository;
 import synchronizationOfFile.synchronizationOfFile.repository.FileRepository;
 import synchronizationOfFile.synchronizationOfFile.repository.MemberRepository;
@@ -54,8 +55,8 @@ public class HomeController {
         model.addAttribute("files", fileRepository.findAll());
         model.addAttribute("member", memberRepository.findAll());
         model.addAttribute("connect_list", connectListRepository.findAll());
-        model.addAttribute("shareFiles", sharedFileListRepository.findBySharedMemberId(memberId));
-        model.addAttribute("sharedFiles", sharedFileListRepository.findByShareMemberId(memberId));
+        model.addAttribute("shareFiles", sharedFileListRepository.findByShareMemberId(memberId));
+        model.addAttribute("sharedFiles", sharedFileListRepository.findBySharedMemberId(memberId));
 
         model.addAttribute("memberId", memberId);
         return "main";
@@ -86,6 +87,14 @@ public class HomeController {
         model.addAttribute("shareMemberId", share);
 
         return "shareFile";
+    }
+
+    @GetMapping("/update-shareFile")
+    public String update_shareFile(HttpServletResponse response, Model model, @RequestParam("shareFileId") Long id) throws IOException {
+        Optional<SharedFileList> tmp = sharedFileListRepository.findById(id);
+        model.addAttribute("shareFile", tmp.get());
+
+        return "updateShareFile";
     }
 
 }

@@ -19,4 +19,6 @@ public class SharedFileList {
     Long sharedMemberId; // 공유받은 멤버의 Id
     @DateTimeFormat(pattern = "yyyy-MM-dd / HH:mm:ss")
     private LocalDateTime createdAt; // 공유 시간
+    @DateTimeFormat(pattern = "yyyy-MM-dd / HH:mm:ss")
+    private LocalDateTime updatedAt; // 수정 시간
 }

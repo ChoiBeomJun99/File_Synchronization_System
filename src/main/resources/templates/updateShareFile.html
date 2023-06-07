@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" type="text/css" href="/css/project.css"/>
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+<head>
+</head>
+<body class="common-body">
+<div class="myform">
+  <form method="POST" enctype="multipart/form-data" action="/update-shareFile">
+    <table>
+      <br/>
+      <h1>공유 파일 수정하기</h1><br>
+      수정할 공유 파일: <h3 th:text="${shareFile.getFileName()}"></h3><br />
+      <tr>
+        <td><input type="file" name="uploadfile" multiple="multiple"/></td>
+      </tr>
+    </table>
+    <td><input type="hidden" name="update_shareFile" id="update_shareFile" th:value="${shareFile.getId()}"></td>
+    <td><input type="hidden" name="memberId" id="memberId" th:value="${shareFile.getShareMemberId()}"></td>
+    <td><input class="small-button" type="submit" value="수정하기" /></td>
+  </form>
+</div>
+</body>
+</html>

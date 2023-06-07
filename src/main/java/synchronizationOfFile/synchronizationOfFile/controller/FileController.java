@@ -203,6 +203,52 @@ public class FileController {
         return "redirect:/main";
     }
 
+    @PostMapping("/update-shareFile") @Transactional
+    public String update_shareFile(HttpServletResponse response, @RequestParam("uploadfile") MultipartFile[] uploadfile, @RequestParam("update_shareFile") Long id,
+                                   @RequestParam("memberId") Long memberId, Model model, RedirectAttributes re) throws IOException {
+
+        List<FileTransferObject> list = new ArrayList<>();
+        re.addAttribute("memberId", memberId);
+
+        SharedFileList shareFile = sharedFileListRepository.findById(id).get();
+
+        for (MultipartFile file : uploadfile) {
+            // 업로드 할 파일이 없는 상황
+            if(file.isEmpty()) {
+                ScriptUtils.alertAndBackPage(response, "파일을 등록해 주세요.");
+                return null;
+            } else {
+                // 업데이트를 위한 삭제 과정
+                Path path = Paths.get(filePath + "/" + shareFile.getFileName());
+
+                //UUID가 포함된 파일이름을 디코딩해줍니다.
+                File removeFile = new File(String.valueOf(path));
+                boolean result = removeFile.delete();
+
+                File thumbnail = new File(removeFile.getParent(),"s_"+file.getName());
+                //getParent() - 현재 File 객체가 나태내는 파일의 디렉토리의 부모 디렉토리의 이름 을 String 으로 리턴해준다.
+                result = thumbnail.delete();
+
+                // 파일 업로드 과정
+                FileTransferObject dto = new FileTransferObject(file.getOriginalFilename(), file.getContentType());
+                list.add(dto);
+
+                // db 데이터 업데이트 과정 (파일 이름, 업데이트 시간 반영)
+                shareFile.setFileName(file.getOriginalFilename());
+                shareFile.setUpdatedAt(LocalDateTime.now());
+
+                File newFileName = new File(dto.getFileName());
+                try {
+                    file.transferTo(newFileName);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return "redirect:/main";
+    }
+
     @PostMapping("/shareFile")
     public String shareFile(HttpServletResponse response, @RequestParam("uploadfile") MultipartFile[] uploadfile, @RequestParam("sharedMemberId") Long shared,
                             @RequestParam("shareMemberId") Long share, Model model, RedirectAttributes re) throws Exception {

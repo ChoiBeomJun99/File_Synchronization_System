@@ -59,6 +59,7 @@
             <tr>
                 <th scope="col">파일 이름</th>
                 <th scope="col">공유자 ID</th>
+                <th scope="col">최근 수정시간</th>
                 <th />
             </tr>
             </thead>
@@ -66,6 +67,7 @@
             <tr th:each="sharedFile : ${sharedFiles}">
                 <td class="noBorder" th:text="${sharedFile.fileName}"></td>
                 <td class="noBorder" th:text="${sharedFile.shareMemberId}"></td>
+                <td th:text="${#temporals.format(sharedFile.updatedAt, 'HH:mm:ss')}"></td>
                 <form action="download-shareFile" method="post">
                     <td>
                         <input type="hidden"  id="sharedFileName" name="sharedFileName" th:value="${sharedFile.fileName}" />
@@ -91,10 +93,10 @@
             <tr th:each="shareFile : ${shareFiles}">
                 <td class="noBorder" th:text="${shareFile.fileName}"></td>
                 <td class="noBorder" th:text="${shareFile.shareMemberId}"></td>
-                <form action="update-shareFile" method="post">
+                <form action="update-shareFile" method="get">
                     <td>
-                        <input type="hidden"  id="shareFileName" name="shareFileName" th:value="${shareFile.fileName}" />
-                        <input class="smallest-button" type="submit" value="수정하기" />
+                        <input type="hidden"  id="shareFileId" name="shareFileId" th:value="${shareFile.id}" />
+                        <input class="smallest-button" type="submit" value="파일 수정" />
                     </td>
                 </form>
             </tr>
